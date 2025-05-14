@@ -242,14 +242,10 @@ local helltide_task = {
 
         check_events(self)
 
-        if not utils.player_in_town() then -- if not in town
+        if not utils.player_in_town() and ni == 1 then -- reset midway a run
             local nearest_ni = find_closest_waypoint_index(tracker.waypoints)
-            if nearest_ni and math.abs(nearest_ni - ni) > 3 then
-                if nearest_ni == #tracker.waypoints then
-                    ni = 1
-                else
-                    ni = nearest_ni
-                end
+            if nearest_ni then
+                ni = nearest_ni
             end 
         end
 
