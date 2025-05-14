@@ -386,9 +386,9 @@ local helltide_task = {
                 interact_object(found_ore)
             end
         else
-            if not tracker.check_time("ore_drop_time", 2) then
-                return
-            end
+            -- if not tracker.check_time("ore_drop_time", 2) then
+            --     return
+            -- end
             found_ore = nil
             self.current_state = helltide_state.GO_NEAREST_COORDINATE
         end
@@ -408,9 +408,9 @@ local helltide_task = {
                 interact_object(found_herb)
             end
         else
-            if not tracker.check_time("herb_drop_time", 2) then
-                return
-            end
+            -- if not tracker.check_time("herb_drop_time", 2) then
+            --     return
+            -- end
             found_herb = nil
             self.current_state = helltide_state.GO_NEAREST_COORDINATE
         end
@@ -418,7 +418,7 @@ local helltide_task = {
 
     move_to_shrine = function(self)
         local shrine = find_closest_target("Shrine_")
-        if shrine then 
+        if shrine and shrine:is_interactable() then 
             if utils.distance_to(shrine) > 2 then
                 -- console.print(string.format("Moving to found_shrine"))
                 explorerlite.is_task_running = false
