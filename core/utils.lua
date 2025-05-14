@@ -77,4 +77,22 @@ function utils.check_cinders(chest_name)
     end
 end
 
+function utils.player_in_town()
+    if get_local_player():get_attribute(attributes.PLAYER_IN_TOWN_LEVEL_AREA) == 1 then
+        return true
+    else
+        return false
+    end
+end
+
+function utils.helltide_active()
+    local minute = os.date("%M")
+    -- No helltide at this time.
+    if minute >= 55 and minute <=59 then
+        return false
+    else
+        return true
+    end
+end
+
 return utils

@@ -127,17 +127,6 @@ local function check_events(self)
             utils.distance_to(find_closest_target("Hell_Prop_Chest_Rare_Locked")) < 12
     then
         self.current_state = helltide_state.MOVING_TO_SILENT_CHEST
-    elseif settings.helltide_chest then
-        for chest_name, _ in pairs(enums.chest_types) do
-            if find_closest_target(chest_name) and
-                find_closest_target(chest_name):is_interactable() and
-                utils.check_cinders(chest_name) and 
-                utils.distance_to(find_closest_target(chest_name)) < 12
-            then
-                found_chest = chest_name
-                self.current_state = helltide_state.MOVING_TO_HELLTIDE_CHEST
-            end
-        end
     elseif find_closest_target("HarvestNode_Ore") and
             find_closest_target("HarvestNode_Ore"):is_interactable() and
             utils.distance_to(find_closest_target("HarvestNode_Ore")) < 8
@@ -157,6 +146,18 @@ local function check_events(self)
         self.current_state = helltide_state.MOVING_TO_SHRINE
     elseif find_closest_target("treasure_goblin") then
         self.current_state = helltide_state.MOVING_TO_GOBLIN
+    elseif settings.helltide_chest then
+        for chest_name, _ in pairs(enums.chest_types) do
+            if find_closest_target(chest_name) and
+                find_closest_target(chest_name):is_interactable() and
+                utils.check_cinders(chest_name) and 
+                utils.distance_to(find_closest_target(chest_name)) < 12
+            then
+                found_chest = chest_name
+                self.current_state = helltide_state.MOVING_TO_HELLTIDE_CHEST
+                break
+            end
+        end
     end
 end
 
@@ -229,10 +230,6 @@ local helltide_task = {
     end,
 
     explore_helltide = function(self)
-        if not utils.is_in_helltide() then
-            self.current_state = helltide_state.BACK_TO_TOWN
-        end
-
         if type(tracker.waypoints) ~= "table" then
             console.print("Error: waypoints is not a table")
             return
@@ -245,7 +242,7 @@ local helltide_task = {
 
         check_events(self)
 
-        if ni < 20 then -- if restarted script and not nearby town
+        if not utils.player_in_town() then -- if not in town
             local nearest_ni = find_closest_waypoint_index(tracker.waypoints)
             if nearest_ni and math.abs(nearest_ni - ni) > 3 then
                 if nearest_ni == #tracker.waypoints then
@@ -256,10 +253,9 @@ local helltide_task = {
             end 
         end
 
-        -- if ni > #tracker.waypoints or ni < 1 or #tracker.waypoints == 0 then
-        --     self.current_state = helltide_state.BACK_TO_TOWN
-        --     return
-        -- end
+        if ni > #tracker.waypoints or ni < 1 or #tracker.waypoints == 0 then
+            ni = 1
+        end
 
         local current_waypoint = tracker.waypoints[ni]
         if current_waypoint then
@@ -489,9 +485,6 @@ local helltide_task = {
     back_to_town = function(self)
         explorerlite.is_task_running = true
         explorer_active = false
-        -- console.print("Helltide completes")
-        tracker.helltide_end = true
-        -- completed one round, use alfred town task to reset season buff check
         if settings.salvage then
             tracker.needs_salvage = true
         end
@@ -501,9 +494,7 @@ local helltide_task = {
         if not tracker.check_time("salvage_return_time", 3) then
             return
         end
-        tracker.has_salvaged = false
-        console.print("Restart helltide")
-        ni = 1
+        tracker.has_salvaged = false -- reset alfred flag
         tracker.clear_key('salvage_return_time')
         self.current_state = helltide_state.EXPLORE_HELLTIDE
     end,
