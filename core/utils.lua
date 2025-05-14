@@ -86,7 +86,7 @@ function utils.player_in_town()
 end
 
 function utils.helltide_active()
-    local minute = os.date("%M")
+    local minute = tonumber(os.date("%M"))
     -- No helltide at this time.
     if minute >= 55 and minute <=59 then
         return false

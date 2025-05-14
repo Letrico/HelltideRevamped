@@ -39,7 +39,7 @@ local search_helltide_task = {
     searching_helltide = function(self)
         console.print("Initializing search helltide")
         if not utils.helltide_active() then
-            -- console.print("Helltide is not active, wait until helltide starts")
+            console.print("Helltide is not active, wait until helltide starts")
             return
         elseif not utils.is_in_helltide() then
             console.print("Not in helltide, teleport to next town to check")
