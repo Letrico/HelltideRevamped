@@ -145,7 +145,7 @@ local function check_events(self)
     then
         self.current_state = helltide_state.MOVING_TO_SHRINE
     elseif find_closest_target("treasure_goblin") then
-        self.current_state = helltide_state.MOVING_TO_GOBLIN
+        self.current_state = helltide_state.CHASE_GOBLIN
     elseif settings.helltide_chest then
         for chest_name, _ in pairs(enums.chest_types) do
             if find_closest_target(chest_name) and
