@@ -494,6 +494,9 @@ local helltide_task = {
         self.current_state = helltide_state.INIT
         tracker.has_salvaged = false
         tracker.needs_salvage = false
+        found_chest = nil
+        found_ore = nil
+        found_herb = nil
     end
 }
 
