@@ -95,4 +95,14 @@ function utils.helltide_active()
     end
 end
 
+function utils.do_events()
+    local minute = tonumber(os.date("%M"))
+    -- Don't do events at this time. Events are bugged and do not end
+    if minute >= 45 then
+        return false
+    else
+        return true
+    end
+end
+
 return utils

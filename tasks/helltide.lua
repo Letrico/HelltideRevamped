@@ -117,9 +117,17 @@ local function randomize_waypoint(waypoint, max_offset)
 end
 
 local function check_events(self)
-    if find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn") and find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn"):is_interactable() then
+    if utils.do_events() and 
+            find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn") and
+            find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn"):is_interactable() and
+            utils.distance_to(find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn")) < 12
+    then
         self.current_state = helltide_state.MOVING_TO_PYRE
-    elseif find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn") and find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn"):is_interactable() then
+    elseif utils.do_events() and 
+            find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn") and
+            find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn"):is_interactable() and
+            utils.distance_to(find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn")) < 12
+    then
         self.current_state = helltide_state.MOVING_TO_PYRE
     elseif settings.silent_chest and utils.have_whispering_key() and 
             find_closest_target("Hell_Prop_Chest_Rare_Locked") and
@@ -141,7 +149,7 @@ local function check_events(self)
         self.current_state = helltide_state.MOVING_TO_HERB
     elseif find_closest_target("Shrine_") and
             find_closest_target("Shrine_"):is_interactable() and
-            utils.distance_to(find_closest_target("Shrine_")) < 6
+            utils.distance_to(find_closest_target("Shrine_")) < 8
     then
         self.current_state = helltide_state.MOVING_TO_SHRINE
     elseif find_closest_target("treasure_goblin") and find_closest_target("treasure_goblin"):get_current_health() > 1 then
@@ -170,7 +178,7 @@ local helltide_task = {
     end,
 
     Execute = function(self)
-        console.print("Current state: " .. self.current_state)
+        -- console.print("Current state: " .. self.current_state)
         if get_local_player() and get_local_player():is_dead() then
             revive_at_checkpoint()
         end
@@ -368,7 +376,7 @@ local helltide_task = {
 
     move_to_ore = function(self)
         if found_ore and found_ore:is_interactable() then 
-            if utils.distance_to(found_ore) > 2 then
+            if utils.distance_to(found_ore) > 1.5 then
                 -- console.print(string.format("Moving to found_ore"))
                 explorerlite.is_task_running = false
                 explorer_active = true
@@ -390,7 +398,7 @@ local helltide_task = {
 
     move_to_herb = function(self)
         if found_herb and found_herb:is_interactable() then 
-            if utils.distance_to(found_herb) > 2 then
+            if utils.distance_to(found_herb) > 1.5 then
                 -- console.print(string.format("Moving to found_herb"))
                 explorerlite.is_task_running = false
                 explorer_active = true

@@ -27,6 +27,42 @@ local function render_pulse()
     end
 end
 
+-- Set Global access for other plugins
+HelltideRevampedPlugin = {
+    enable = function ()
+        console.print('HELLTIDE REVAMPED ACTIVATING')
+        gui.elements.main_toggle:set(true)
+        gui.elements.keybind_toggle:set(true)
+        settings:update_settings()
+    end,
+    disable = function ()
+        console.print('HELLTIDE REVAMPED DEACTIVATING')
+        gui.elements.main_toggle:set(false)
+        settings:update_settings()
+    end,
+    status = function ()
+        return {
+            ['enabled'] = gui.elements.main_toggle:get(),
+            ['task'] = task_manager.get_current_task()
+        }
+    end,
+    getSettings = function (setting)
+        if settings[setting] then
+            return settings[setting]
+        else
+            return nil
+        end
+    end,
+    setSettings = function (setting, value)
+        if settings[setting] then
+            settings[setting] = value
+            return true
+        else
+            return false
+        end
+    end,
+}
+
 on_update(function()
     update_locals()
     main_pulse()
