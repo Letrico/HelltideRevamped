@@ -144,7 +144,7 @@ local function check_events(self)
             utils.distance_to(find_closest_target("Shrine_")) < 6
     then
         self.current_state = helltide_state.MOVING_TO_SHRINE
-    elseif find_closest_target("treasure_goblin") then
+    elseif find_closest_target("treasure_goblin") and find_closest_target("treasure_goblin"):get_current_health() > 1 then
         self.current_state = helltide_state.CHASE_GOBLIN
     elseif settings.helltide_chest then
         for chest_name, _ in pairs(enums.chest_types) do
@@ -424,14 +424,14 @@ local helltide_task = {
             else
                 interact_object(shrine)
             end
-        else
+        else 
             self.current_state = helltide_state.GO_NEAREST_COORDINATE
         end
     end,
 
     chase_goblin = function(self)
         local goblin = find_closest_target("treasure_goblin")
-        if goblin then 
+        if goblin and goblin:get_current_health() > 1 then 
             if utils.distance_to(goblin) > 2 then
                 -- console.print(string.format("Moving to found_goblin"))
                 explorerlite.is_task_running = false
@@ -440,8 +440,6 @@ local helltide_task = {
                 explorerlite:move_to_target()
                 -- pathfinder.force_move(goblin:get_position())
                 return
-            else
-                interact_object(goblin)
             end
         else
             if not tracker.check_time("goblin_drop_time", 4) then
