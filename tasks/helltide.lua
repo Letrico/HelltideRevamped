@@ -170,7 +170,7 @@ local helltide_task = {
     end,
 
     Execute = function(self)
-        -- console.print("Current state: " .. self.current_state)
+        console.print("Current state: " .. self.current_state)
         if get_local_player() and get_local_player():is_dead() then
             revive_at_checkpoint()
         end
@@ -191,12 +191,6 @@ local helltide_task = {
             self:initiate_waypoints()
         elseif self.current_state == helltide_state.EXPLORE_HELLTIDE then
             self:explore_helltide()
-        elseif self.current_state == helltide_state.MOVING_TO_COCOON then
-            self:move_to_cocoon()
-        elseif self.current_state == helltide_state.INTERACT_COCOON then
-            self:interact_cocoon()
-        elseif self.current_state == helltide_state.STAY_NEAR_COCOON then
-            self:stay_near_cocoon()
         elseif self.current_state == helltide_state.MOVING_TO_PYRE then
             self:move_to_pyre()
         elseif self.current_state == helltide_state.INTERACT_PYRE then
