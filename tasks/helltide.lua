@@ -383,7 +383,6 @@ local helltide_task = {
                 explorerlite:set_custom_target(found_ore:get_position())
                 explorerlite:move_to_target()
                 -- pathfinder.force_move(found_ore:get_position())
-                return
             end
             interact_object(found_ore)
         else
@@ -405,7 +404,6 @@ local helltide_task = {
                 explorerlite:set_custom_target(found_herb:get_position())
                 explorerlite:move_to_target()
                 -- pathfinder.force_move(found_herb:get_position())
-                return
             end
             interact_object(found_herb)
         else
