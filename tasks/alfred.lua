@@ -1,4 +1,4 @@
-local plugin_label = "helltide" -- change to your plugin name
+local plugin_label = "helltide_revamped" -- change to your plugin name
 
 local settings = require 'core.settings'
 local tracker = require "core.tracker"
