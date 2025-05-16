@@ -2,6 +2,7 @@ local utils = require "core.utils"
 local tracker = require "core.tracker"
 local helltide_task = require "tasks.helltide"
 local enums = require "data.enums"
+local settings = require "core.settings"
 local plugin_label = "helltide_revamped"
 
 local current_city_index = 0
@@ -43,8 +44,8 @@ local search_helltide_task = {
         if not utils.helltide_active() then
             console.print("Helltide is not active, wait until helltide starts")
             if not utils.player_in_zone("Scos_Cerrigar") then
-                if PLUGIN_alfred_the_butler then
-                    PLUGIN_alfred_the_butler.trigger_tasks(plugin_label,function()end)
+                if settings.salvage and PLUGIN_alfred_the_butler then
+                    PLUGIN_alfred_the_butler.trigger_tasks(plugin_label)
                 end
                 teleport_to_waypoint(0x76D58) -- Go to cerrigar and wait for helltide
             end
