@@ -17,7 +17,7 @@ end
 ---Returns wether the player is in the zone name specified
 ---@param zname string
 function utils.player_in_zone(zname)
-    return get_current_world():get_current_zone_name():match(zname)
+    return get_current_world():get_current_zone_name() == zname
 end
 
 function utils.loot_on_floor()
