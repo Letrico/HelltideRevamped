@@ -137,13 +137,13 @@ local function check_events(self)
         self.current_state = helltide_state.MOVING_TO_SILENT_CHEST
     elseif find_closest_target("HarvestNode_Ore") and
             find_closest_target("HarvestNode_Ore"):is_interactable() and
-            utils.distance_to(find_closest_target("HarvestNode_Ore")) < 8
+            utils.distance_to(find_closest_target("HarvestNode_Ore")) < 12
     then
         found_ore = find_closest_target("HarvestNode_Ore")
         self.current_state = helltide_state.MOVING_TO_ORE
     elseif find_closest_target("HarvestNode_Herb") and
             find_closest_target("HarvestNode_Herb"):is_interactable() and
-            utils.distance_to(find_closest_target("HarvestNode_Herb")) < 8
+            utils.distance_to(find_closest_target("HarvestNode_Herb")) < 12
     then
         found_herb = find_closest_target("HarvestNode_Herb")
         self.current_state = helltide_state.MOVING_TO_HERB
@@ -159,7 +159,7 @@ local function check_events(self)
             if find_closest_target(chest_name) and
                 find_closest_target(chest_name):is_interactable() and
                 utils.check_cinders(chest_name) and 
-                utils.distance_to(find_closest_target(chest_name)) < 12
+                utils.distance_to(find_closest_target(chest_name)) < 16
             then
                 found_chest = chest_name
                 self.current_state = helltide_state.MOVING_TO_HELLTIDE_CHEST
@@ -232,9 +232,8 @@ local helltide_task = {
     end,
 
     explore_helltide = function(self)
-        if type(tracker.waypoints) ~= "table" then
-            console.print("Error: waypoints is not a table")
-            return
+        if #tracker.waypoints == 0 then
+            self.current_state = helltide_state.INIT
         end
 
         if type(ni) ~= "number" then
@@ -376,7 +375,8 @@ local helltide_task = {
 
     move_to_ore = function(self)
         if found_ore and found_ore:is_interactable() then 
-            if utils.distance_to(found_ore) > 1.5 then
+            if utils.distance_to(found_ore) >= 2 then
+                -- console.print("Found ore distance: " .. tostring(utils.distance_to(found_ore)))
                 -- console.print(string.format("Moving to found_ore"))
                 explorerlite.is_task_running = false
                 explorer_active = true
@@ -384,9 +384,8 @@ local helltide_task = {
                 explorerlite:move_to_target()
                 -- pathfinder.force_move(found_ore:get_position())
                 return
-            else
-                interact_object(found_ore)
             end
+            interact_object(found_ore)
         else
             -- if not tracker.check_time("ore_drop_time", 2) then
             --     return
@@ -398,7 +397,8 @@ local helltide_task = {
 
     move_to_herb = function(self)
         if found_herb and found_herb:is_interactable() then 
-            if utils.distance_to(found_herb) > 1.5 then
+            if utils.distance_to(found_herb) >= 2 then
+                -- console.print("Found herb distance: " .. tostring(utils.distance_to(found_herb)))
                 -- console.print(string.format("Moving to found_herb"))
                 explorerlite.is_task_running = false
                 explorer_active = true
@@ -406,9 +406,8 @@ local helltide_task = {
                 explorerlite:move_to_target()
                 -- pathfinder.force_move(found_herb:get_position())
                 return
-            else
-                interact_object(found_herb)
             end
+            interact_object(found_herb)
         else
             -- if not tracker.check_time("herb_drop_time", 2) then
             --     return

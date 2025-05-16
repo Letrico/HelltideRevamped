@@ -75,7 +75,7 @@ local explorerlite = {
     is_task_running = false, --added to prevent boss dead pathing 
 }
 local target_position = nil
-local grid_size = 2            -- Size of grid cells in meters
+local grid_size = 0.8            -- Size of grid cells in meters
 local max_target_distance = 120 -- Maximum distance for a new target
 local target_distance_states = {120, 40, 20, 5}
 local target_distance_index = 1
@@ -508,11 +508,11 @@ local function move_to_target()
             path_index = path_index + 1
         end
 
-        if calculate_distance(player_pos, target_position) < 2 then
-            target_position = nil
-            current_path = {}
-            path_index = 1
-        end
+        -- if calculate_distance(player_pos, target_position) < 2 then
+        --     target_position = nil
+        --     current_path = {}
+        --     path_index = 1
+        -- end
     else
         -- Move to center if no target
         console.print("No target found. Moving to center.")

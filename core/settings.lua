@@ -2,7 +2,7 @@ local gui = require "gui"
 local settings = {
     enabled = false,
     salvage = true,
-    path_angle = 20,
+    path_angle = 1,
     silent_chest = true,
     helltide_chest = true,
 }

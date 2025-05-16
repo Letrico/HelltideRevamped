@@ -38,8 +38,8 @@ local search_helltide_task = {
 
     searching_helltide = function(self)
         console.print("Initializing search helltide")
+        self:reset()
         if not utils.helltide_active() then
-            self:reset()
             console.print("Helltide is not active, wait until helltide starts")
             if not utils.player_in_zone("Scos_Cerrigar") then
                 teleport_to_waypoint(0x76D58) -- Go to cerrigar and wait for helltide
