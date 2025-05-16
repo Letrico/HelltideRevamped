@@ -45,7 +45,10 @@ local search_helltide_task = {
             console.print("Helltide is not active, wait until helltide starts")
             if not utils.player_in_zone("Scos_Cerrigar") then
                 if settings.salvage and PLUGIN_alfred_the_butler then
-                    PLUGIN_alfred_the_butler.trigger_tasks(plugin_label)
+                    PLUGIN_alfred_the_butler.resume()
+                    PLUGIN_alfred_the_butler.trigger_tasks(plugin_label, function ()
+                        PLUGIN_alfred_the_butler.pause(plugin_label)
+                    end)
                 end
                 teleport_to_waypoint(0x76D58) -- Go to cerrigar and wait for helltide
             end
