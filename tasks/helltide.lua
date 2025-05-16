@@ -137,13 +137,15 @@ local function check_events(self)
         self.current_state = helltide_state.MOVING_TO_SILENT_CHEST
     elseif find_closest_target("HarvestNode_Ore") and
             find_closest_target("HarvestNode_Ore"):is_interactable() and
-            utils.distance_to(find_closest_target("HarvestNode_Ore")) < 12
+            utils.distance_to(find_closest_target("HarvestNode_Ore")) < 12 and
+            utils.check_z_distance(find_closest_target("HarvestNode_Ore"), 2.5)
     then
         found_ore = find_closest_target("HarvestNode_Ore")
         self.current_state = helltide_state.MOVING_TO_ORE
     elseif find_closest_target("HarvestNode_Herb") and
             find_closest_target("HarvestNode_Herb"):is_interactable() and
-            utils.distance_to(find_closest_target("HarvestNode_Herb")) < 12
+            utils.distance_to(find_closest_target("HarvestNode_Herb")) < 12 and
+            utils.check_z_distance(find_closest_target("HarvestNode_Herb"), 2.5)
     then
         found_herb = find_closest_target("HarvestNode_Herb")
         self.current_state = helltide_state.MOVING_TO_HERB

@@ -14,6 +14,19 @@ function utils.distance_to(target)
     return player_pos:dist_to(target_pos)
 end
 
+function utils.check_z_distance(target, distance)
+    local player_pos = get_player_position()
+    local target_pos
+
+    if target.get_position then
+        target_pos = target:get_position()
+    elseif target.x then
+        target_pos = target
+    end
+
+    return math.abs(player_pos:z() - target_pos:z()) <= distance
+end
+
 ---Returns wether the player is in the zone name specified
 ---@param zname string
 function utils.player_in_zone(zname)
