@@ -64,7 +64,8 @@ function utils.is_inventory_full()
         if status.enabled and (
             status.inventory_full or
             status.restock_count > 0 or
-            status.need_repair
+            status.need_repair or
+            status.teleport
         ) then
             return true
         end
