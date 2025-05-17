@@ -54,6 +54,22 @@ function utils.get_consumable_info(item)
 end
 
 function utils.is_inventory_full()
+    if AlfredTheButlerPlugin then
+        local status = AlfredTheButlerPlugin.get_status()
+        if (status.enabled and status.need_trigger) then
+            return true
+        end
+    elseif PLUGIN_alfred_the_butler then
+        local status = PLUGIN_alfred_the_butler.get_status()
+        if status.enabled and (
+            status.inventory_full or
+            status.restock_count > 0 or
+            status.need_repair or
+            status.teleport
+        ) then
+            return true
+        end
+    end
     return get_local_player():get_item_count() == 33
 end
 
