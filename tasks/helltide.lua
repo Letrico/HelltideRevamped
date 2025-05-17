@@ -89,7 +89,7 @@ end
 
 local function check_and_load_waypoints()
     for _, tp in ipairs(enums.helltide_tps) do
-        if utils.player_in_zone(tp.name) then
+        if utils.player_in_region(tp.region) then
             load_waypoints(tp.file)
             return
         end
@@ -172,7 +172,7 @@ local function check_events(self)
 end
 
 local helltide_task = {
-    name = "Explore Helltiide",
+    name = "Explore Helltide",
     current_state = helltide_state.INIT,
 
     shouldExecute = function()
@@ -181,6 +181,7 @@ local helltide_task = {
 
     Execute = function(self)
         -- console.print("Current state: " .. self.current_state)
+        self.name = "Explore Helltide (" .. self.current_state .. ")"
         if get_local_player() and get_local_player():is_dead() then
             revive_at_checkpoint()
         end
@@ -318,8 +319,6 @@ local helltide_task = {
                 explorerlite:move_to_target()
                 -- pathfinder.force_move(pyre:get_position())
                 return
-            else
-                self.current_state = helltide_state.GO_NEAREST_COORDINATE
             end
         else
             self.current_state = helltide_state.GO_NEAREST_COORDINATE
@@ -461,7 +460,7 @@ local helltide_task = {
     go_to_nearest_coordinate = function(self)
         check_events(self)
         tracker.clear_key('chest_drop_time')
-        tracker.clear_key('pyre_timeout')
+        tracker.clear_key('goblin_drop_time')
         local nearest_ni = find_closest_waypoint_index(tracker.waypoints)
         if nearest_ni and math.abs(nearest_ni - ni) > 5 then
             ni = nearest_ni

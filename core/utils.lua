@@ -33,6 +33,10 @@ function utils.player_in_zone(zname)
     return get_current_world():get_current_zone_name() == zname
 end
 
+function utils.player_in_region(rname)
+    return get_current_world():get_current_zone_name():match(rname)
+end
+
 function utils.loot_on_floor()
     return loot_manager.any_item_around(get_player_position(), 30, true, true)
 end
