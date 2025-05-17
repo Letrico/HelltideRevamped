@@ -35,7 +35,9 @@ function task.shouldExecute()
             status = PLUGIN_alfred_the_butler.get_status()
         end
         -- add additional conditions to trigger if required
-        if (status.enabled and tracker.needs_salvage) then
+        if (status.enabled and tracker.needs_salvage) or
+            task.status == status_enum['WAITING']
+        then
             return true
         end
     end
