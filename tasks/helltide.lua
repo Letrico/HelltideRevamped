@@ -117,13 +117,13 @@ local function randomize_waypoint(waypoint, max_offset)
 end
 
 local function check_events(self)
-    if utils.do_events() and 
+    if settings.event and utils.do_events() and 
             find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn") and
             find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn"):is_interactable() and
             utils.distance_to(find_closest_target("S04_Helltide_Prop_SoulSyphon_01_Dyn")) < 12
     then
         self.current_state = helltide_state.MOVING_TO_PYRE
-    elseif utils.do_events() and 
+    elseif settings.event and utils.do_events() and 
             find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn") and
             find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn"):is_interactable() and
             utils.distance_to(find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn")) < 12
@@ -135,26 +135,26 @@ local function check_events(self)
             utils.distance_to(find_closest_target("Hell_Prop_Chest_Rare_Locked")) < 12
     then
         self.current_state = helltide_state.MOVING_TO_SILENT_CHEST
-    elseif find_closest_target("HarvestNode_Ore") and
+    elseif settings.ore and find_closest_target("HarvestNode_Ore") and
             find_closest_target("HarvestNode_Ore"):is_interactable() and
             utils.distance_to(find_closest_target("HarvestNode_Ore")) < 12 and
             utils.check_z_distance(find_closest_target("HarvestNode_Ore"), 2.5)
     then
         found_ore = find_closest_target("HarvestNode_Ore")
         self.current_state = helltide_state.MOVING_TO_ORE
-    elseif find_closest_target("HarvestNode_Herb") and
+    elseif settings.herb and find_closest_target("HarvestNode_Herb") and
             find_closest_target("HarvestNode_Herb"):is_interactable() and
             utils.distance_to(find_closest_target("HarvestNode_Herb")) < 12 and
             utils.check_z_distance(find_closest_target("HarvestNode_Herb"), 2.5)
     then
         found_herb = find_closest_target("HarvestNode_Herb")
         self.current_state = helltide_state.MOVING_TO_HERB
-    elseif find_closest_target("Shrine_") and
+    elseif settings.shrine and find_closest_target("Shrine_") and
             find_closest_target("Shrine_"):is_interactable() and
             utils.distance_to(find_closest_target("Shrine_")) < 8
     then
         self.current_state = helltide_state.MOVING_TO_SHRINE
-    elseif find_closest_target("treasure_goblin") and find_closest_target("treasure_goblin"):get_current_health() > 1 then
+    elseif settings.goblin and find_closest_target("treasure_goblin") and find_closest_target("treasure_goblin"):get_current_health() > 1 then
         self.current_state = helltide_state.CHASE_GOBLIN
     elseif settings.helltide_chest then
         for chest_name, _ in pairs(enums.chest_types) do
