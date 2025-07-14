@@ -72,14 +72,20 @@ local search_helltide_task = {
     end,
 
     teleporting_to_helltide = function(self)
-        if not ( utils.player_in_zone(nil) or utils.player_in_zone("")) then
+        if not ( utils.player_in_zone(nil) or utils.player_in_zone("") or utils.player_in_zone("[sno none]")) then
+            if not tracker.check_time("wait_in_town", 10) then
+                if (current_city_index and current_city_index > 0) then
+                    teleport_to_waypoint(enums.helltide_tps[current_city_index].id)
+                end
+                return
+            end
             if current_city_index > #enums.helltide_tps then
                 current_city_index = 1
             else
                 current_city_index = (current_city_index % #enums.helltide_tps) + 1
             end
             -- console.print("Teleporting to: " .. tostring(enums.helltide_tps[current_city_index].file))
-            tracker.wait_in_town = nil
+            tracker.wait_in_town = get_time_since_inject()
             teleport_to_waypoint(enums.helltide_tps[current_city_index].id)
             self.current_state = search_helltide_state.WAITING_FOR_TELEPORT
         else
@@ -89,10 +95,9 @@ local search_helltide_task = {
     end,
 
     waiting_for_teleport = function(self)
-        if utils.player_in_zone(enums.helltide_tps[current_city_index].name) then
-            if not tracker.check_time("wait_in_town", 4) then
-                return
-            end
+        if utils.player_in_zone(nil) or utils.player_in_zone("") or utils.player_in_zone("[sno none]") then
+            return
+        elseif utils.player_in_zone(enums.helltide_tps[current_city_index].name) then
             self.current_state = search_helltide_state.SEARCHING_HELLTIDE
         else
             -- fail teleport, retry
