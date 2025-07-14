@@ -2,7 +2,8 @@ local tracker = {
     has_salvaged = false,
     needs_salvage = false,
     helltide_start = false,
-    waypoints = {}
+    waypoints = {},
+    wait_in_town = 0
 }
 
 function tracker.check_time(key, delay)
