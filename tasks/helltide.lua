@@ -19,6 +19,9 @@ local helltide_state = {
     MOVING_TO_ORE = "MOVING_TO_ORE",
     MOVING_TO_HERB = "MOVING_TO_HERB",
     MOVING_TO_SHRINE = "MOVING_TO_SHRINE",
+    MOVING_TO_CHAOS_RIFT = "MOVING_TO_CHAOS_RIFT",
+    INTERACT_CHAOS_RIFT = "INTERACT_CHAOS_RIFT",
+    STAY_NEAR_CHAOS_RIFT = "STAY_NEAR_CHAOS_RIFT",
     CHASE_GOBLIN = "CHASE_GOBLIN",
     GO_NEAREST_COORDINATE = "GO_NEAREST_COORDINATE",
     BACK_TO_TOWN = "BACK_TO_TOWN"
@@ -129,6 +132,12 @@ local function check_events(self)
             utils.distance_to(find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn")) < 12
     then
         self.current_state = helltide_state.MOVING_TO_PYRE
+    elseif settings.event and utils.do_events() and 
+            find_closest_target("S10_ChaosRiftChoiceGizmo") and
+            find_closest_target("S10_ChaosRiftChoiceGizmo"):is_interactable() and
+            utils.distance_to(find_closest_target("S10_ChaosRiftChoiceGizmo")) < 16
+    then
+        self.current_state = helltide_state.MOVING_TO_CHAOS_RIFT
     elseif settings.silent_chest and utils.have_whispering_key() and 
             find_closest_target("Hell_Prop_Chest_Rare_Locked") and
             find_closest_target("Hell_Prop_Chest_Rare_Locked"):is_interactable() and
@@ -220,6 +229,12 @@ local helltide_task = {
             self:move_to_shrine()
         elseif self.current_state == helltide_state.CHASE_GOBLIN then
             self:chase_goblin()
+        elseif self.current_state == helltide_state.MOVING_TO_CHAOS_RIFT then
+            self:move_to_chaos_rift()
+        elseif self.current_state == helltide_state.INTERACT_CHAOS_RIFT then
+            self:interact_chaos_rift()
+        elseif self.current_state == helltide_state.STAY_NEAR_CHAOS_RIFT then
+            self:stay_near_chaos_rift()
         elseif self.current_state == helltide_state.GO_NEAREST_COORDINATE then
             self:go_to_nearest_coordinate()
         elseif self.current_state == helltide_state.BACK_TO_TOWN then
@@ -453,6 +468,57 @@ local helltide_task = {
             if not tracker.check_time("goblin_drop_time", 4) then
                 return
             end
+            self.current_state = helltide_state.GO_NEAREST_COORDINATE
+        end
+    end,
+
+    move_to_chaos_rift = function(self)
+        local chaos_rift = find_closest_target("S10_ChaosRiftChoiceGizmo")
+        if chaos_rift then 
+            if utils.distance_to(chaos_rift) > 2 then
+                -- console.print(string.format("Moving to chaos_rift"))
+                explorerlite.is_task_running = false
+                explorer_active = true
+                explorerlite:set_custom_target(chaos_rift:get_position())
+                explorerlite:move_to_target()
+                -- pathfinder.force_move(chaos_rift:get_position())
+                return
+            else
+                self.current_state = helltide_state.INTERACT_CHAOS_RIFT
+            end
+        else
+            self.current_state = helltide_state.GO_NEAREST_COORDINATE
+        end
+    end,
+
+    interact_chaos_rift = function(self)
+        local chaos_rift = find_closest_target("S10_ChaosRiftChoiceGizmo")
+        if chaos_rift then
+            if chaos_rift:is_interactable() then
+                interact_object(chaos_rift)
+            else
+                self.current_state = helltide_state.STAY_NEAR_CHAOS_RIFT
+            end
+        else
+            self.current_state = helltide_state.GO_NEAREST_COORDINATE
+        end
+    end,
+
+    stay_near_chaos_rift = function(self)
+        local chaos_rift = find_closest_target("S10_ChaosRiftChoiceGizmo") or find_closest_target("S10_ChaosRiftPortal") or find_closest_target("MarkerLocation_BSK_Occupied")
+        if chaos_rift then
+            if chaos_rift:is_interactable() then
+                self.current_state = helltide_state.INTERACT_CHAOS_RIFT
+            elseif utils.distance_to(chaos_rift) > 1 then
+                -- console.print(string.format("Stay near chaos_rift"))
+                explorerlite.is_task_running = false
+                explorer_active = true
+                explorerlite:set_custom_target(chaos_rift:get_position())
+                explorerlite:move_to_target()
+                -- pathfinder.force_move(chaos_rift:get_position())
+                return
+            end
+        else
             self.current_state = helltide_state.GO_NEAREST_COORDINATE
         end
     end,

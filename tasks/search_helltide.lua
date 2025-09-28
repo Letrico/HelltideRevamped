@@ -72,15 +72,14 @@ local search_helltide_task = {
     end,
 
     teleporting_to_helltide = function(self)
-        if not ( utils.player_in_zone(nil) or utils.player_in_zone("")) then
+        if not ( get_current_world():get_name() == "Limbo") and not tracker.teleporting then
             if current_city_index > #enums.helltide_tps then
                 current_city_index = 1
             else
                 current_city_index = (current_city_index % #enums.helltide_tps) + 1
             end
-            -- console.print("Teleporting to: " .. tostring(enums.helltide_tps[current_city_index].file))
+            console.print("Teleporting to: " .. tostring(enums.helltide_tps[current_city_index].file))
             tracker.wait_in_town = nil
-            teleport_to_waypoint(enums.helltide_tps[current_city_index].id)
             self.current_state = search_helltide_state.WAITING_FOR_TELEPORT
         else
             console.print("Currently in loading screen. Waiting before attempting teleport.")
@@ -93,8 +92,16 @@ local search_helltide_task = {
             if not tracker.check_time("wait_in_town", 4) then
                 return
             end
+            tracker.teleporting = false
             self.current_state = search_helltide_state.SEARCHING_HELLTIDE
         else
+            if utils.is_teleporting() then
+                tracker.teleporting = true
+                return
+            else
+                teleport_to_waypoint(enums.helltide_tps[current_city_index].id)
+                return
+            end
             -- fail teleport, retry
             tracker.clear_key('wait_in_town')
             self.current_state = search_helltide_state.TELEPORTING

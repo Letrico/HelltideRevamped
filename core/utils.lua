@@ -87,6 +87,16 @@ function utils.is_in_helltide()
     return false
 end
 
+function utils.is_teleporting()
+    local buffs = get_local_player():get_buffs()
+    for _, buff in ipairs(buffs) do
+        if buff.name_hash == 44010 then -- teleport buff
+        return true
+        end
+    end
+    return false
+end
+
 function utils.have_whispering_key()
     local inventory = get_local_player():get_consumable_items()
     for _, item in pairs(inventory) do
