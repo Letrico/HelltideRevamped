@@ -22,6 +22,7 @@ function settings:update_settings()
     settings.shrine = gui.elements.shrine_toggle:get()
     settings.goblin = gui.elements.goblin_toggle:get()
     settings.event = gui.elements.event_toggle:get()
+    settings.chaos_rift = gui.elements.chaos_rift_toggle:get()
 end
 
 return settings

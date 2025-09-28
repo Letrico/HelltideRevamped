@@ -132,7 +132,7 @@ local function check_events(self)
             utils.distance_to(find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn")) < 12
     then
         self.current_state = helltide_state.MOVING_TO_PYRE
-    elseif settings.event and utils.do_events() and 
+    elseif settings.chaos_rift and utils.do_events() and 
             find_closest_target("S10_ChaosRiftChoiceGizmo") and
             find_closest_target("S10_ChaosRiftChoiceGizmo"):is_interactable() and
             utils.distance_to(find_closest_target("S10_ChaosRiftChoiceGizmo")) < 16

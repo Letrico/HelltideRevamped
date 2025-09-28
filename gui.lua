@@ -1,5 +1,5 @@
 local gui = {}
-local version = "v0.1"
+local version = "v0.3"
 local plugin_label = "helltide_revamped"
 
 local function create_checkbox(value, key)
@@ -18,6 +18,7 @@ gui.elements = {
     shrine_toggle = create_checkbox(true, plugin_label .. "shrine_toggle"),
     goblin_toggle = create_checkbox(true, plugin_label .. "goblin_toggle"),
     event_toggle = create_checkbox(true, plugin_label .. "event_toggle"),
+    chaos_rift_toggle = create_checkbox(true, plugin_label .. "chaos_rift_toggle"),
 }
 
 function gui.render()
@@ -34,6 +35,7 @@ function gui.render()
         gui.elements.shrine_toggle:render("Use Shrine", "Use shrine")
         gui.elements.goblin_toggle:render("Chase goblin", "Chase goblin")
         gui.elements.event_toggle:render("Do events (flame pillar/ravenous soul)", "Do events")
+        gui.elements.chaos_rift_toggle:render("Do chaos rift", "Do chaos rift")
         gui.elements.settings_tree:pop()
     end
 
