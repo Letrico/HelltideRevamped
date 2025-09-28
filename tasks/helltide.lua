@@ -28,6 +28,8 @@ local helltide_state = {
 }
 
 local ni = 1
+local last_ni = nil
+local last_ni_change_time = 0
 local explorer_active = false
 
 local function find_closest_target(name)
@@ -132,7 +134,7 @@ local function check_events(self)
             utils.distance_to(find_closest_target("S04_Helltide_FlamePillar_Switch_Dyn")) < 12
     then
         self.current_state = helltide_state.MOVING_TO_PYRE
-    elseif settings.chaos_rift and utils.do_events() and 
+    elseif settings.chaos_rift and 
             find_closest_target("S10_ChaosRiftChoiceGizmo") and
             find_closest_target("S10_ChaosRiftChoiceGizmo"):is_interactable() and
             utils.distance_to(find_closest_target("S10_ChaosRiftChoiceGizmo")) < 16
@@ -266,6 +268,18 @@ local helltide_task = {
             if nearest_ni then
                 ni = nearest_ni
             end 
+        end
+
+        -- Check if ni changed
+        if ni ~= last_ni then
+            last_ni = ni
+            last_ni_change_time = os.clock()
+        end
+
+        -- If ni hasn't changed for 4 seconds, do something
+        if os.clock() - last_ni_change_time > 4 then
+            -- console.print("ni hasn't changed for 4 seconds!")
+            self.current_state = helltide_state.GO_NEAREST_COORDINATE
         end
 
         if ni > #tracker.waypoints or ni < 1 or #tracker.waypoints == 0 then
@@ -519,6 +533,10 @@ local helltide_task = {
                 return
             end
         else
+            -- Chaos rift finished but wait for loot
+            if not tracker.check_time("chaos_rift_loot_time", 4) then
+                return
+            end
             self.current_state = helltide_state.GO_NEAREST_COORDINATE
         end
     end,
@@ -527,6 +545,7 @@ local helltide_task = {
         check_events(self)
         tracker.clear_key('chest_drop_time')
         tracker.clear_key('goblin_drop_time')
+        tracker.clear_key('chaos_rift_loot_time')
         local nearest_ni = find_closest_waypoint_index(tracker.waypoints)
         if nearest_ni and math.abs(nearest_ni - ni) > 5 then
             ni = nearest_ni
